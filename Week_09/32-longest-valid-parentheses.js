@@ -8,13 +8,32 @@ var longestValidParentheses = function(s) {
     for (let i = 0; i < s.length; i++) {
         if (s.charAt(i) === '(') {
             stack.push(i);
-        } else if (s.charAt(i) === ')') {
-            let top = stack.pop();
-            if (top === ')') {
-                max = Math.max(max, i - top);
+        } else {
+            if (!stack.length) {
+                stack.push(i);
+            } else {
+                if (s.charAt(stack[stack.length - 1]) === '(') {
+                    stack.pop();
+                } else {
+                    stack.push(i);
+                }
             }
         }
     }
+
+    if (!stack.length) {
+        max = s.length;
+    } else {
+        let top = s.length;
+        let down = 0;
+        while (stack.length) {
+            down = stack.pop();
+            max = Math.max(max, top - down - 1);
+            top = down;
+        }
+        max = Math.max(max, top);
+    }
+
     return max;
 };
 
@@ -52,3 +71,4 @@ var longestValidParentheses_first = function(s) {
 console.log(longestValidParentheses(')()())'), 4);
 console.log(longestValidParentheses('(()'), 2);
 console.log(longestValidParentheses('()'), 2);
+console.log(longestValidParentheses('())'), 2);
